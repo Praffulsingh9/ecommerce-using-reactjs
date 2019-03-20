@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
-const SALT_I = 10;
 const jwt = require("jsonwebtoken");
+const SALT_I = 10;
 require("dotenv").config();
 
 const userSchema = mongoose.Schema({
@@ -14,17 +14,17 @@ const userSchema = mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minLength: 5
+    minlength: 5
   },
   name: {
     type: String,
     required: true,
-    maxLength: 100
+    maxlength: 100
   },
   lastname: {
     type: String,
     required: true,
-    maxLength: 100
+    maxlength: 100
   },
   cart: {
     type: Array,
@@ -52,7 +52,6 @@ userSchema.pre("save", function(next) {
 
       bcrypt.hash(user.password, salt, function(err, hash) {
         if (err) return next(err);
-
         user.password = hash;
         next();
       });

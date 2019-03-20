@@ -13,20 +13,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-//Models
-
+// Models
 const { User } = require("./models/user");
 
-//Middlewares
-
+// Middlewares
 const { auth } = require("./middleware/auth");
 
-//==================================
-//        Users
-//==================================
+//=================================
+//              USERS
+//=================================
 
-//AUTH ROUTE
-
+//Authentication route
 app.get("/api/users/auth", auth, (req, res) => {
   res.status(200).json({
     isAdmin: req.user.role === 0 ? false : true,
@@ -40,7 +37,7 @@ app.get("/api/users/auth", auth, (req, res) => {
   });
 });
 
-//REGISTER USER
+//Register route
 app.post("/api/users/register", (req, res) => {
   const user = new User(req.body);
 
@@ -52,30 +49,45 @@ app.post("/api/users/register", (req, res) => {
   });
 });
 
-//LOGIN USER
+//Login route
+
 app.post("/api/users/login", (req, res) => {
-  //prettier-ignore
-  User.findOne({ 'email': req.body.email }, (err, user) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
     if (!user)
       return res.json({
-        loginSucess: false,
-        message: "Auth fails,email not found"
+        loginSuccess: false,
+        message: "Auth failed, email not found"
       });
 
     user.comparePassword(req.body.password, (err, isMatch) => {
       if (!isMatch)
-        return res.json({ loginSucess: false, message: "Wrong password" });
+        return res.json({ loginSuccess: false, message: "Wrong password" });
 
       user.generateToken((err, user) => {
         if (err) return res.status(400).send(err);
-        //prettier-ignore
-        res.cookie('w_auth', user.token,{httpOnly:false}).status(200).json({ loginSucess: true });
+        res
+          .cookie("w_auth", user.token)
+          .status(200)
+          .json({
+            loginSuccess: true
+          });
       });
+    });
+  });
+});
+
+//Logout route
+
+app.get("/api/users/logout", auth, (req, res) => {
+  User.findByIdAndUpdate({ _id: req.user._id }, { token: "" }, (err, doc) => {
+    if (err) return res.json({ success: false, err });
+    return res.status(200).send({
+      success: true
     });
   });
 });
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => {
-  console.log(`Server running at ${port}`);
+  console.log(`Server Running at ${port}`);
 });
