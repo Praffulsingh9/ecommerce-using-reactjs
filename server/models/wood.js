@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const brandSchema = mongoose.Schema({
+const woodSchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -9,6 +9,6 @@ const brandSchema = mongoose.Schema({
   }
 });
 
-const Brand = mongoose.model("Brand", brandSchema);
+const Wood = mongoose.model("Wood", woodSchema);
 
-module.exports = { Brand };
+module.exports = { Wood };
