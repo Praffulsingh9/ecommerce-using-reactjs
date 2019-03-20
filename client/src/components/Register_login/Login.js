@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import Formfield from "../utils/Form/formFields";
+import { update } from "../utils/Form/formActions";
 class Login extends Component {
   state = {
     formError: false,
@@ -42,7 +43,13 @@ class Login extends Component {
 
   submitForm = () => {};
 
-  updateForm = () => {};
+  updateForm = element => {
+    const newFormdata = update(element, this.state.formdata, "login");
+    this.setState({
+      formError: false,
+      formdata: newFormdata
+    });
+  };
 
   render() {
     return (
@@ -51,6 +58,11 @@ class Login extends Component {
           <Formfield
             id={"email"}
             formdata={this.state.formdata.email}
+            change={element => this.updateForm(element)}
+          />
+          <Formfield
+            id={"password"}
+            formdata={this.state.formdata.password}
             change={element => this.updateForm(element)}
           />
         </form>
