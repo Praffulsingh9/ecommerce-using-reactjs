@@ -1,16 +1,36 @@
 import React, { Component } from "react";
 import PageTop from "../utils/page_top";
+import { frets, price } from "../utils/Form/fixed_categories";
 import { connect } from "react-redux";
 import { getBrands, getWoods } from "../../actions/product_actions";
 import CollapseCheckbox from "../utils/collapse_checkbox";
-
+import CollapseRadio from "../utils/collapse_radio";
 class Shop extends Component {
+  state = {
+    grid: "",
+    limit: 6,
+    skip: 0,
+    filters: {
+      brand: [],
+      frets: [],
+      wood: [],
+      price: []
+    }
+  };
+
   componentDidMount = () => {
     this.props.getBrands();
     this.props.getWoods();
   };
 
-  handleFilters = () => {};
+  handleFilters = (filters, category) => {
+    const newFilters = { ...this.state.filters };
+    newFilters[category] = filters;
+
+    this.setState({
+      filters: newFilters
+    });
+  };
 
   render() {
     const products = this.props.products;
@@ -26,6 +46,24 @@ class Shop extends Component {
                 list={products.brands}
                 handleFilters={filters => this.handleFilters(filters, "brand")}
               />
+              <CollapseCheckbox
+                initState={false}
+                title="Frets"
+                list={frets}
+                handleFilters={filters => this.handleFilters(filters, "frets")}
+              />
+              <CollapseCheckbox
+                initState={false}
+                title="Wood"
+                list={products.woods}
+                handleFilters={filters => this.handleFilters(filters, "wood")}
+              />
+              {/*<CollapseRadio
+                initState={true}
+                title="Price"
+                list={price}
+                handleFilters={filters => this.handleFilters(filters, "price")}
+              />*/}
             </div>
             <div className="right">right</div>
           </div>
