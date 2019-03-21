@@ -80,7 +80,7 @@ app.post("/api/product/shop", (req, res) => {
   let skip = parseInt(req.body.skip);
   let findArgs = {};
 
-  for (let key in reqq.body.filters) {
+  for (let key in req.body.filters) {
     if (req.body.filters[key].length > 0) {
       if (key === "price") {
         findArgs[key] = {
@@ -98,7 +98,13 @@ app.post("/api/product/shop", (req, res) => {
     .sort([[sortBy, order]])
     .skip(skip)
     .limit(limit)
-    .exec(() => {});
+    .exec((err, articles) => {
+      if (err) return res.status(400).send(err);
+      res.status(200).json({
+        size: articles.length,
+        articles
+      });
+    });
 });
 
 app.get("/api/product/articles_by_id", (req, res) => {
