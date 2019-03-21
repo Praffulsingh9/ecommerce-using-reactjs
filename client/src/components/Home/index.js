@@ -6,7 +6,7 @@ import {
   getProductsByArrival,
   getProductsBySell
 } from "../../actions/product_actions";
-
+import CardBlock from "../utils/card_block";
 class Home extends Component {
   componentDidMount() {
     this.props.getProductsBySell();
@@ -17,7 +17,12 @@ class Home extends Component {
     return (
       <div>
         <HomeSlider />
+        <CardBlock
+          list={this.props.products.bySell}
+          title="Best Selling Guitars"
+        />
         <HomePromotion />
+        <CardBlock list={this.props.products.byArrival} title="New Arrivals" />
       </div>
     );
   }
@@ -26,6 +31,7 @@ class Home extends Component {
 const mapStateToProps = state => ({
   products: state.products
 });
+
 export default connect(
   mapStateToProps,
   { getProductsByArrival, getProductsBySell }
