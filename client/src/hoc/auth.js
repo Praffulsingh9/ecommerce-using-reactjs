@@ -42,11 +42,9 @@ export default function(ComposedClass, reload, adminRoute = null) {
     }
   }
 
-  function mapStateToProps(state) {
-    return {
-      user: state.user
-    };
-  }
+  const mapStateToProps = state => ({
+    user: state.user
+  });
 
   return connect(
     mapStateToProps,
