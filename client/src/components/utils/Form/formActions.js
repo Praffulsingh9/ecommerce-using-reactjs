@@ -7,16 +7,16 @@ export const validate = (element, formdata = []) => {
     error = !valid ? [valid, message] : error;
   }
 
-  if (element.validation.required) {
-    const valid = element.value.trim() !== "";
-    const message = `${!valid ? "This field is required" : ""}`;
-    error = !valid ? [valid, message] : error;
-  }
-
   if (element.validation.confirm) {
     const valid =
       element.value.trim() === formdata[element.validation.confirm].value;
-    const message = `${!valid ? "Password do not match" : ""}`;
+    const message = `${!valid ? "Passwords do not match" : ""}`;
+    error = !valid ? [valid, message] : error;
+  }
+
+  if (element.validation.required) {
+    const valid = element.value.trim() !== "";
+    const message = `${!valid ? "This field is required" : ""}`;
     error = !valid ? [valid, message] : error;
   }
 
@@ -30,6 +30,7 @@ export const update = (element, formdata, formName) => {
   const newElement = {
     ...newFormdata[element.id]
   };
+
   newElement.value = element.event.target.value;
 
   if (element.blur) {
@@ -37,6 +38,7 @@ export const update = (element, formdata, formName) => {
     newElement.valid = validData[0];
     newElement.validationMessage = validData[1];
   }
+
   newElement.touched = element.blur;
   newFormdata[element.id] = newElement;
 
@@ -45,11 +47,13 @@ export const update = (element, formdata, formName) => {
 
 export const generateData = (formdata, formName) => {
   let dataToSubmit = {};
+
   for (let key in formdata) {
     if (key !== "confirmPassword") {
       dataToSubmit[key] = formdata[key].value;
     }
   }
+
   return dataToSubmit;
 };
 
@@ -74,15 +78,31 @@ export const populateOptionFields = (formdata, arrayData = [], field) => {
   return newFormdata;
 };
 
-export const resetFields = (formdata, formname) => {
+export const resetFields = (formdata, formName) => {
   const newFormdata = { ...formdata };
 
   for (let key in newFormdata) {
-    newFormdata[key].value = "";
+    if (key === "images") {
+      newFormdata[key].value = [];
+    } else {
+      newFormdata[key].value = "";
+    }
+
     newFormdata[key].valid = false;
     newFormdata[key].touched = false;
     newFormdata[key].validationMessage = "";
   }
 
   return newFormdata;
+};
+
+export const populateFields = (formData, fields) => {
+  for (let key in formData) {
+    formData[key].value = fields[key];
+    formData[key].valid = true;
+    formData[key].touched = true;
+    formData[key].validationMessage = "";
+  }
+
+  return formData;
 };

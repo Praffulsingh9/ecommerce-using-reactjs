@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import Dropzone from "react-dropzone";
 import axios from "axios";
 
@@ -18,13 +17,15 @@ class FileUpload extends Component {
 
   onDrop = files => {
     this.setState({ uploading: true });
-    let formdata = new FormData();
+    let formData = new FormData();
     const config = {
       header: { "content-type": "multipart/form-data" }
     };
-    formdata.append("file", files[0]);
+    formData.append("file", files[0]);
 
-    axios.post("/api/users/uploadimage", formdata, config).then(response => {
+    axios.post("/api/users/uploadimage", formData, config).then(response => {
+      console.log(response.data);
+
       this.setState(
         {
           uploading: false,
@@ -68,15 +69,24 @@ class FileUpload extends Component {
       </div>
     ));
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.reset) {
+      return (state = {
+        uploadedFiles: []
+      });
+    }
+    return null;
+  }
+
   render() {
     return (
       <div>
         <section>
           <div className="dropzone clear">
             <Dropzone
+              onDrop={e => this.onDrop(e)}
               multiple={false}
               className="dropzone_box"
-              onDrop={e => this.onDrop(e)}
             >
               <div className="wrap">
                 <FontAwesomeIcon icon={faPlusCircle} />

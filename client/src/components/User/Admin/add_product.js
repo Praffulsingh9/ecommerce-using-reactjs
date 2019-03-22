@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import UserLayout from "../../../hoc/user";
-import FileUpload from "../../utils/Form/fileUpload";
+
 import FormField from "../../utils/Form/formFields";
 import {
   update,
@@ -9,6 +9,8 @@ import {
   populateOptionFields,
   resetFields
 } from "../../utils/Form/formActions";
+import FileUpload from "../../utils/Form/fileUpload";
+
 import { connect } from "react-redux";
 import {
   getBrands,
@@ -190,28 +192,6 @@ class AddProduct extends Component {
     }
   };
 
-  componentDidMount() {
-    const formdata = this.state.formdata;
-
-    this.props.getBrands().then(response => {
-      const newFormData = populateOptionFields(
-        formdata,
-        this.props.products.brands,
-        "brand"
-      );
-      this.updateFields(newFormData);
-    });
-
-    this.props.getWoods().then(response => {
-      const newFormData = populateOptionFields(
-        formdata,
-        this.props.products.woods,
-        "wood"
-      );
-      this.updateFields(newFormData);
-    });
-  }
-
   updateFields = newFormdata => {
     this.setState({
       formdata: newFormdata
@@ -227,9 +207,10 @@ class AddProduct extends Component {
   };
 
   resetFieldHandler = () => {
-    const newFormdata = resetFields(this.state.formdata, "products");
+    const newFormData = resetFields(this.state.formdata, "products");
+
     this.setState({
-      formdata: newFormdata,
+      formdata: newFormData,
       formSuccess: true
     });
     setTimeout(() => {
@@ -238,7 +219,7 @@ class AddProduct extends Component {
           formSuccess: false
         },
         () => {
-          this.props.clearProduct();
+          this.props.dispatch(clearProduct());
         }
       );
     }, 3000);
@@ -251,7 +232,7 @@ class AddProduct extends Component {
     let formIsValid = isFormValid(this.state.formdata, "products");
 
     if (formIsValid) {
-      this.props.addProduct(dataToSubmit).then(() => {
+      this.props.dispatch(addProduct(dataToSubmit)).then(() => {
         if (this.props.products.addProduct.success) {
           this.resetFieldHandler();
         } else {
@@ -264,6 +245,28 @@ class AddProduct extends Component {
       });
     }
   };
+
+  componentDidMount() {
+    const formdata = this.state.formdata;
+
+    this.props.dispatch(getBrands()).then(response => {
+      const newFormData = populateOptionFields(
+        formdata,
+        this.props.products.brands,
+        "brand"
+      );
+      this.updateFields(newFormData);
+    });
+
+    this.props.dispatch(getWoods()).then(response => {
+      const newFormData = populateOptionFields(
+        formdata,
+        this.props.products.woods,
+        "wood"
+      );
+      this.updateFields(newFormData);
+    });
+  }
 
   imagesHandler = images => {
     const newFormData = {
@@ -281,12 +284,14 @@ class AddProduct extends Component {
     return (
       <UserLayout>
         <div>
-          <h1>Add Product</h1>
+          <h1>Add product</h1>
+
           <form onSubmit={event => this.submitForm(event)}>
             <FileUpload
               imagesHandler={images => this.imagesHandler(images)}
               reset={this.state.formSuccess}
             />
+
             <FormField
               id={"name"}
               formdata={this.state.formdata.name}
@@ -364,11 +369,10 @@ class AddProduct extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  products: state.products
-});
+const mapStateToProps = state => {
+  return {
+    products: state.products
+  };
+};
 
-export default connect(
-  mapStateToProps,
-  { getBrands, getWoods, addProduct, clearProduct }
-)(AddProduct);
+export default connect(mapStateToProps)(AddProduct);
