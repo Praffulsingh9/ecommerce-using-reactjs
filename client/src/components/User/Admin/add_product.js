@@ -5,10 +5,16 @@ import {
   update,
   generateData,
   isFormValid,
-  populateOptionFields
+  populateOptionFields,
+  resetFields
 } from "../../utils/Form/formActions";
 import { connect } from "react-redux";
-import { getBrands, getWoods } from "../../../actions/product_actions";
+import {
+  getBrands,
+  getWoods,
+  addProduct,
+  clearProduct
+} from "../../../actions/product_actions";
 
 class AddProduct extends Component {
   state = {
@@ -211,6 +217,53 @@ class AddProduct extends Component {
     });
   };
 
+  updateForm = element => {
+    const newFormdata = update(element, this.state.formdata, "products");
+    this.setState({
+      formError: false,
+      formdata: newFormdata
+    });
+  };
+
+  resetFieldHandler = () => {
+    const newFormdata = resetFields(this.state.formdata, "products");
+    this.setState({
+      formdata: newFormdata,
+      formSuccess: true
+    });
+    setTimeout(() => {
+      this.setState(
+        {
+          formSuccess: false
+        },
+        () => {
+          this.props.clearProduct();
+        }
+      );
+    }, 3000);
+  };
+
+  submitForm = event => {
+    event.preventDefault();
+
+    let dataToSubmit = generateData(this.state.formdata, "products");
+    let formIsValid = isFormValid(this.state.formdata, "products");
+
+    if (formIsValid) {
+      this.props.addProduct(dataToSubmit).then(() => {
+        if (this.props.products.addProduct.success) {
+          this.resetFieldHandler();
+        } else {
+          this.setState({ formError: true });
+        }
+      });
+    } else {
+      this.setState({
+        formError: true
+      });
+    }
+  };
+
   render() {
     return (
       <UserLayout>
@@ -300,5 +353,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getBrands, getWoods }
+  { getBrands, getWoods, addProduct, clearProduct }
 )(AddProduct);
