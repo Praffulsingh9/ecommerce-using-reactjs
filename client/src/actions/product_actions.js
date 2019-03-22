@@ -52,7 +52,12 @@ export const getWoods = () => {
   };
 };
 
-export const getProductsToShop = (skip, limit, filters = [], prevState) => {
+export const getProductsToShop = (
+  skip,
+  limit,
+  filters = [],
+  prevState = []
+) => {
   const data = {
     limit,
     skip,
@@ -60,9 +65,10 @@ export const getProductsToShop = (skip, limit, filters = [], prevState) => {
   };
 
   const request = axios.post(`${PRODUCT_SERVER}/shop`, data).then(response => {
+    let newState = [...prevState, ...response.data.articles];
     return {
       size: response.data.size,
-      articles: response.data.articles
+      articles: newState
     };
   });
 
