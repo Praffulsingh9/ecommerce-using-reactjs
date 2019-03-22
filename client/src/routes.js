@@ -7,6 +7,7 @@ import Register from "./components/Register_login/Register";
 import UserDashboard from "./components/User/index";
 import Auth from "./hoc/auth";
 import Shop from "./components/Shop";
+import AddProduct from "./components/User/Admin/add_product";
 const Routes = () => {
   return (
     <Layout>
@@ -15,6 +16,11 @@ const Routes = () => {
           path="/user/dashboard"
           exact
           component={Auth(UserDashboard, true)}
+        />
+        <Route
+          path="/admin/dashboard"
+          exact
+          component={Auth(AddProduct, true)}
         />
         <Route
           path="/register_login"
