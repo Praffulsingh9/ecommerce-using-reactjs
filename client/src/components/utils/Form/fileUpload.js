@@ -6,7 +6,7 @@ import FontAwesomeIcon from "@fortawesome/react-fontawesome";
 import faPlusCircle from "@fortawesome/fontawesome-free-solid/faPlusCircle";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-class FileUpload extends Component {
+class Fileupload extends Component {
   constructor() {
     super();
     this.state = {
@@ -111,4 +111,4 @@ class FileUpload extends Component {
   }
 }
 
-export default FileUpload;
+export default Fileupload;

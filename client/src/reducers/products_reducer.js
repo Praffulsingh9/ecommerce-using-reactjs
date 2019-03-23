@@ -12,7 +12,6 @@ export default function(state = {}, action) {
   switch (action.type) {
     case GET_PRODUCTS_BY_SELL:
       return { ...state, bySell: action.payload };
-
     case GET_PRODUCTS_BY_ARRIVAL:
       return { ...state, byArrival: action.payload };
     case GET_BRANDS:
@@ -26,15 +25,10 @@ export default function(state = {}, action) {
         toShopSize: action.payload.size
       };
     case ADD_PRODUCT:
-      return {
-        ...state,
-        addProduct: action.payload
-      };
+      return { ...state, addProduct: action.payload };
     case CLEAR_PRODUCT:
-      return {
-        ...state,
-        addProduct: action.payload
-      };
+      return { ...state, addProduct: action.payload };
+
     default:
       return state;
   }
