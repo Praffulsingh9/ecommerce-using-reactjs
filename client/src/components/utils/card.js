@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import MyButton from "./button";
+import { connect } from "react-redux";
+import { addToCart } from "../../actions/user_actions";
 class Card extends Component {
   renderCardImage(images) {
     if (images.length > 0) {
@@ -8,6 +10,7 @@ class Card extends Component {
       return "/images/image_not_availble.png";
     }
   }
+
   render() {
     const props = this.props;
     return (
@@ -47,7 +50,9 @@ class Card extends Component {
               <MyButton
                 type="bag_link"
                 runAction={() => {
-                  console.log("you need to log in");
+                  props.user.userData.isAuth
+                    ? this.props.addToCart(props._id)
+                    : console.log("you need to login");
                 }}
               />
             </div>
@@ -58,4 +63,11 @@ class Card extends Component {
   }
 }
 
-export default Card;
+const mapStateToProps = state => ({
+  user: state.user
+});
+
+export default connect(
+  mapStateToProps,
+  { addToCart }
+)(Card);
