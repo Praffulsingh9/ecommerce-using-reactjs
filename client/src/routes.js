@@ -8,6 +8,7 @@ import UserDashboard from "./components/User/index";
 import Auth from "./hoc/auth";
 import Shop from "./components/Shop";
 import AddProduct from "./components/User/Admin/add_product";
+import ManageCategories from "./components/User/Admin/manage_categories";
 const Routes = () => {
   return (
     <Layout>
@@ -21,6 +22,11 @@ const Routes = () => {
           path="/admin/add_product"
           exact
           component={Auth(AddProduct, true)}
+        />
+        <Route
+          path="/admin/manage_categories"
+          exact
+          component={Auth(ManageCategories, true)}
         />
         <Route
           path="/register_login"
