@@ -7,6 +7,7 @@ import {
   getProductDetail,
   clearProductDetail
 } from "../../actions/product_actions";
+import { addToCart } from "../../actions/user_actions";
 class ProductPage extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
@@ -20,6 +21,10 @@ class ProductPage extends Component {
   componentWillUnmount() {
     this.props.clearProductDetail();
   }
+
+  addToCartHandler = id => {
+    this.props.addToCart(id);
+  };
 
   render() {
     return (
@@ -55,5 +60,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getProductDetail, clearProductDetail }
+  { getProductDetail, clearProductDetail, addToCart }
 )(ProductPage);
