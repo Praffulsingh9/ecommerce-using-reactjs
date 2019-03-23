@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import ImageLightBox from "../utils/lightbox";
 class ProdImage extends Component {
   state = {
     ligthbox: false,
@@ -26,6 +26,12 @@ class ProdImage extends Component {
         imagePos: pos
       });
     }
+  };
+
+  handleLightBoxClose = () => {
+    this.setState({
+      lightbox: false
+    });
   };
 
   showThumbs = () =>
@@ -63,6 +69,15 @@ class ProdImage extends Component {
           />
         </div>
         <div className="main_thumbs">{this.showThumbs(detail)}</div>
+        {this.state.lightbox ? (
+          <ImageLightBox
+            id={detail.id}
+            images={this.state.lightboxImages}
+            open={this.state.open}
+            pos={this.state.imagePos}
+            onclose={() => this.handleLightBoxClose()}
+          />
+        ) : null}
       </div>
     );
   }
