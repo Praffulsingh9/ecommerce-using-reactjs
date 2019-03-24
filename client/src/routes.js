@@ -9,6 +9,7 @@ import Auth from "./hoc/auth";
 import Shop from "./components/Shop";
 import ProductPage from "./components/Product";
 import AddProduct from "./components/User/Admin/add_product";
+import UserCart from "./components/User/cart";
 import ManageCategories from "./components/User/Admin/manage_categories";
 const Routes = () => {
   return (
@@ -19,6 +20,7 @@ const Routes = () => {
           exact
           component={Auth(UserDashboard, true)}
         />
+        <Route path="/user/cart" exact component={Auth(UserCart, true)} />
         <Route
           path="/admin/add_product"
           exact
