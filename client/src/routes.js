@@ -12,6 +12,7 @@ import AddProduct from "./components/User/Admin/add_product";
 import UserCart from "./components/User/cart";
 import ManageCategories from "./components/User/Admin/manage_categories";
 import UpdateProfile from "./components/User/update_profile";
+import ManageSite from "./components/User/Admin/manage_site";
 const Routes = () => {
   return (
     <Layout>
@@ -31,6 +32,11 @@ const Routes = () => {
           path="/admin/manage_categories"
           exact
           component={Auth(ManageCategories, true)}
+        />
+        <Route
+          path="/admin/site_info"
+          exact
+          component={Auth(ManageSite, true)}
         />
         <Route
           path="/user/user_profile"
