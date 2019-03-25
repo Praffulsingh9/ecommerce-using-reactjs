@@ -7,6 +7,7 @@ import {
   isFormValid,
   populateFields
 } from "../utils/Form/formActions";
+import { updateUserData, clearUpdateUser } from "../../actions/user_actions";
 
 class UpdatePersonalNfo extends Component {
   state = {
@@ -62,12 +63,15 @@ class UpdatePersonalNfo extends Component {
     }
   };
 
-  componentDidMount(){
-    const newFormData = populateFields(this.state.formdata,this.props.user.userData);
+  componentDidMount() {
+    const newFormData = populateFields(
+      this.state.formdata,
+      this.props.user.userData
+    );
     this.setState({
-        formdata: newFormData
-    })
-}
+      formdata: newFormData
+    });
+  }
 
   updateForm = element => {
     const newFormdata = update(element, this.state.formdata, "update_user");
@@ -84,7 +88,23 @@ class UpdatePersonalNfo extends Component {
     let formIsValid = isFormValid(this.state.formdata, "update_user");
 
     if (formIsValid) {
-      console.log(dataToSubmit);
+      this.props.updateUserData(dataToSubmit).then(() => {
+        if (this.props.user.updateUser.success) {
+          this.setState(
+            {
+              formSuccess: true
+            },
+            () => {
+              setTimeout(() => {
+                this.props.clearUpdateUser();
+                this.setState({
+                  formSuccess: false
+                });
+              }, 2000);
+            }
+          );
+        }
+      });
     } else {
       this.setState({
         formError: true
@@ -141,4 +161,7 @@ const mapStateToProps = state => {
     user: state.user
   };
 };
-export default connect(mapStateToProps)(UpdatePersonalNfo);
+export default connect(
+  mapStateToProps,
+  { updateUserData, clearUpdateUser }
+)(UpdatePersonalNfo);
