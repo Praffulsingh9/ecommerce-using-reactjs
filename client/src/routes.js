@@ -11,6 +11,7 @@ import ProductPage from "./components/Product";
 import AddProduct from "./components/User/Admin/add_product";
 import UserCart from "./components/User/cart";
 import ManageCategories from "./components/User/Admin/manage_categories";
+import UpdateProfile from "./components/User/update_profile";
 const Routes = () => {
   return (
     <Layout>
@@ -30,6 +31,11 @@ const Routes = () => {
           path="/admin/manage_categories"
           exact
           component={Auth(ManageCategories, true)}
+        />
+        <Route
+          path="/user/user_profile"
+          exact
+          component={Auth(UpdateProfile, true)}
         />
         <Route
           path="/register_login"
