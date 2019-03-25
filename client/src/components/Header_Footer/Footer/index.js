@@ -5,8 +5,8 @@ import faPhone from "@fortawesome/fontawesome-free-solid/faPhone";
 import faClock from "@fortawesome/fontawesome-free-solid/faClock";
 import faEnvelope from "@fortawesome/fontawesome-free-solid/faEnvelope";
 
-const Footer = () => {
-  return (
+const Footer = ({ data }) => {
+  return data.siteData ? (
     <footer className="bck_b_dark">
       <div className="container">
         <div className="logo">Waves</div>
@@ -18,28 +18,28 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faCompass} className="icon" />
                 <div className="nfo">
                   <div>Address</div>
-                  <div>Alfredio Street 12</div>
+                  <div>{data.siteData[0].address}</div>
                 </div>
               </div>
               <div className="tag">
                 <FontAwesomeIcon icon={faPhone} className="icon" />
                 <div className="nfo">
                   <div>Phone</div>
-                  <div>(+91) 8384928547</div>
+                  <div>{data.siteData[0].phone}</div>
                 </div>
               </div>
               <div className="tag">
                 <FontAwesomeIcon icon={faClock} className="icon" />
                 <div className="nfo">
                   <div>Working Hours</div>
-                  <div>Sun 9:00 AM - Sat 11:00 PM</div>
+                  <div>{data.siteData[0].hours}</div>
                 </div>
               </div>
               <div className="tag">
                 <FontAwesomeIcon icon={faEnvelope} className="icon" />
                 <div className="nfo">
                   <div>Email</div>
-                  <div>prafful.singh017@gmail.com</div>
+                  <div>{data.siteData[0].email}</div>
                 </div>
               </div>
             </div>
@@ -56,7 +56,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
-  );
+  ) : null;
 };
 
 export default Footer;

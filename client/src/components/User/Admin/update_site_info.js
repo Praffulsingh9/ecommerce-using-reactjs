@@ -6,7 +6,7 @@ import {
   isFormValid,
   populateFields
 } from "../../utils/Form/formActions";
-import { getSiteData } from "../../../actions/site_actions";
+import { getSiteData, updateSiteData } from "../../../actions/site_actions";
 import { connect } from "react-redux";
 class UpdateSiteInfo extends Component {
   state = {
@@ -113,13 +113,27 @@ class UpdateSiteInfo extends Component {
     let formIsValid = isFormValid(this.state.formdata, "site_info");
 
     if (formIsValid) {
-      console.log(dataToSubmit);
+      this.props.updateSiteData(dataToSubmit).then(() => {
+        this.setState(
+          {
+            formSuccess: true
+          },
+          () => {
+            setTimeout(() => {
+              this.setState({
+                formSuccess: false
+              });
+            }, 2000);
+          }
+        );
+      });
     } else {
       this.setState({
         formError: true
       });
     }
   };
+
   render() {
     return (
       <div>
@@ -170,5 +184,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getSiteData }
+  { getSiteData, updateSiteData }
 )(UpdateSiteInfo);
