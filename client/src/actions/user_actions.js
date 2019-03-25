@@ -7,7 +7,8 @@ import {
   LOGOUT_USER,
   ADD_TO_CART,
   GET_CART_ITEMS_USER,
-  REMOVE_CART_ITEM
+  REMOVE_CART_ITEM,
+  ON_SUCCESS_BY_USER
 } from "./types";
 
 export const loginUser = dataToSubmit => {
@@ -100,6 +101,16 @@ export const removeCartItem = id => {
 
   return {
     type: REMOVE_CART_ITEM,
+    payload: request
+  };
+};
+
+export const onSuccessBuy = data => {
+  const request = axios
+    .post(`${USER_SERVER}/successBuy`, data)
+    .then(response => response.data);
+  return {
+    type: ON_SUCCESS_BY_USER,
     payload: request
   };
 };
