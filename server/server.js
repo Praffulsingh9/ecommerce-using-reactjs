@@ -27,6 +27,7 @@ const { User } = require("./models/user");
 const { Brand } = require("./models/brand");
 const { Wood } = require("./models/wood");
 const { Payment } = require("./models/payment");
+const { Site } = require("./models/site");
 // Middlewares
 const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
@@ -401,6 +402,13 @@ app.post("/api/users/update_profile", auth, (req, res) => {
       });
     }
   );
+});
+
+app.get("/api/site/site_data", (req, res) => {
+  Site.find({}, (err, site) => {
+    if (err) return res.status(400).send(err);
+    res.status(200).send(site[0].siteInfo);
+  });
 });
 
 const port = process.env.PORT || 3002;
