@@ -8,11 +8,11 @@ const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const db = require("../config/keys").mongoURI;
-
 mongoose.Promise = global.Promise;
 mongoose
-  .connect(db, { useNewUrlParser: true })
+  .connect(
+    "mongodb+srv://prafful:lockhorn123@strings-3jgzp.mongodb.net/test?retryWrites=true"
+  )
   .then(() => console.log("Database connected"))
   .catch(err => console.log(err));
 
