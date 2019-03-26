@@ -8,8 +8,13 @@ const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+const db = require("../config/keys").mongoURI;
+
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DATABASE);
+mongoose
+  .connect(db, { useNewUrlParser: true })
+  .then(() => console.log("Database connected"))
+  .catch(err => console.log(err));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
