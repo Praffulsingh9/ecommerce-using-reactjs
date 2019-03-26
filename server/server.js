@@ -9,10 +9,9 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 
 mongoose.Promise = global.Promise;
+const db = require("../config/keys").mongoURI;
 mongoose
-  .connect(
-    "mongodb+srv://prafful:lockhorn123@strings-3jgzp.mongodb.net/test?retryWrites=true"
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log("Database connected"))
   .catch(err => console.log(err));
 
