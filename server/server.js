@@ -1,38 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const mailer = require('nodemailer');
+const mailer = require("nodemailer");
 const formidable = require("express-formidable");
 const async = require("async");
 const cloudinary = require("cloudinary");
 const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
-
-// const smtpTransport = mailer.createTransport({
-//   service:'Gmail',
-//   auth:{
-//     user:'shop.strings2k19@gmail.com',
-//     pass:'qwerty123@'
-//   }
-// })
-
-// var mail = {
-//   from:'Strings <shop.strings2k19@gmail.com>',
-//   to:'prafful07msd@yahoo.in',
-//   subject:'Send test email',
-//   text:'Testing our mails',
-//   html:'<b>Hello guys this works</b>'
-// }
-
-// smtpTransport.sendMail(mail,(error,response)=>{
-//   if(error){
-//     console.log(error);
-//   } else {
-//     console.log('email sent')
-//   }
-//   smtpTransport.close();
-// })
+var SHA256 = require("crypto-js/sha256");
 
 mongoose.Promise = global.Promise;
 const db = require("../config/keys").mongoURI;
@@ -62,8 +38,7 @@ const { Site } = require("./models/site");
 const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
 
-
-const { sendEmail } = require('./utils/mail/index');
+const { sendEmail } = require("./utils/mail/index");
 //=================================
 //              BRAND
 //=================================
@@ -219,7 +194,7 @@ app.post("/api/users/register", (req, res) => {
 
   user.save((err, doc) => {
     if (err) return res.json({ success: false, err });
-    sendEmail(doc.email,doc.name,null,"welcome");
+    sendEmail(doc.email, doc.name, null, "welcome");
     return res.status(200).json({
       success: true
     });
@@ -361,9 +336,15 @@ app.get("/api/users/removeFromCart", auth, (req, res) => {
 app.post("/api/users/successBuy", auth, (req, res) => {
   let history = [];
   let transactionData = {};
-
+  const date = new Date();
+  const po = `PO-${date.getSeconds()}${date.getMilliseconds()}-${SHA256(
+    req.user._id
+  )
+    .toString()
+    .substring(0, 8)}`;
   req.body.cartDetail.forEach(item => {
     history.push({
+      porder: po,
       dateOfPurchase: Date.now(),
       name: item.name,
       brand: item.brand.name,
@@ -379,7 +360,10 @@ app.post("/api/users/successBuy", auth, (req, res) => {
     lastname: req.user.lastname,
     email: req.user.email
   };
-  transactionData.data = req.body.paymentData;
+  transactionData.data = {
+    ...req.body.paymentData,
+        porder: po
+  }
   transactionData.product = history;
 
   User.findOneAndUpdate(
