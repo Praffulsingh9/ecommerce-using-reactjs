@@ -209,6 +209,13 @@ app.get('/api/users/admin_files',auth,admin,(req,res)=>{
 })
 
 
+
+app.get('/api/users/download/:id',auth,admin,(req,res)=>{
+  const file = path.resolve(".")+`/uploads/${req.params.id}`;
+  res.download(file)
+})
+
+
 app.get("/api/users/auth", auth, (req, res) => {
   res.status(200).json({
     isAdmin: req.user.role === 0 ? false : true,
