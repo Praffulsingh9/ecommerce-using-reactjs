@@ -9,6 +9,7 @@ const app = express();
 const mongoose = require("mongoose");
 require("dotenv").config();
 var SHA256 = require("crypto-js/sha256");
+const multer = require('multer');
 
 mongoose.Promise = global.Promise;
 const db = require("../config/keys").mongoURI;
@@ -39,6 +40,7 @@ const { auth } = require("./middleware/auth");
 const { admin } = require("./middleware/admin");
 
 const { sendEmail } = require("./utils/mail/index");
+
 //=================================
 //              BRAND
 //=================================
@@ -175,6 +177,38 @@ app.post("/api/product/article", auth, admin, (req, res) => {
 //=================================
 
 //Authentication route
+
+let storage = multer.diskStorage({
+  destination:(req,file,cb)=>{
+      cb(null,'uploads/')
+  },
+  filename:(req,file,cb)=>{
+      cb(null,`${Date.now()}_${file.originalname}`)
+  }
+});
+
+const upload = multer({storage:storage }).single('file')
+
+app.post('/api/users/uploadfile',auth,admin,(req,res)=>{
+  upload(req,res,(err)=>{
+      if(err){
+          return res.json({success:false,err})
+      }
+      return res.json({success:true})
+  })
+})
+
+const fs = require('fs');
+const path = require('path');
+
+app.get('/api/users/admin_files',auth,admin,(req,res)=>{
+  const dir = path.resolve(".")+'/uploads/';
+  fs.readdir(dir,(err,items)=>{
+      return res.status(200).send(items);
+  })
+})
+
+
 app.get("/api/users/auth", auth, (req, res) => {
   res.status(200).json({
     isAdmin: req.user.role === 0 ? false : true,

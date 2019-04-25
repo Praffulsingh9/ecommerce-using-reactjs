@@ -9,6 +9,7 @@ import Auth from "./hoc/auth";
 import Shop from "./components/Shop";
 import ProductPage from "./components/Product";
 import AddProduct from "./components/User/Admin/add_product";
+import AddFile from "./components/User/Admin/add_file"; 
 import UserCart from "./components/User/cart";
 import ManageCategories from "./components/User/Admin/manage_categories";
 import UpdateProfile from "./components/User/update_profile";
@@ -38,6 +39,11 @@ const Routes = () => {
           path="/admin/site_info"
           exact
           component={Auth(ManageSite, true)}
+        />
+        <Route
+          path="/admin/add_file"
+          exact
+          component={Auth(AddFile, true)}
         />
         <Route
           path="/user/user_profile"
