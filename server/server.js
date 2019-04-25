@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const mailer = require("nodemailer");
+
+const moment = require("moment");
 const formidable = require("express-formidable");
 const async = require("async");
 const cloudinary = require("cloudinary");
@@ -228,6 +229,44 @@ app.get("/api/users/auth", auth, (req, res) => {
     history: req.user.history
   });
 });
+
+app.post('/api/users/reset_user',(req,res)=>{
+  User.findOne(
+      {'email':req.body.email},
+      (err,user)=>{
+          user.generateResetToken((err,user)=>{
+              if(err) return res.json({success:false,err});
+              sendEmail(user.email,user.name,null,"reset_password",user)
+              return res.json({success:true})
+          })
+      }
+  )
+})
+
+app.post('/api/users/reset_password',(req,res)=>{
+
+  var today = moment().startOf('day').valueOf();
+
+  User.findOne({
+      resetToken: req.body.resetToken,
+      resetTokenExp:{
+          $gte: today
+      }
+  },(err,user)=>{
+      if(!user) return res.json({success:false,message:'Sorry, token bad, generate a new one.'})
+  
+      user.password = req.body.password;
+      user.resetToken = '';
+      user.resetTokenExp= '';
+
+      user.save((err,doc)=>{
+          if(err) return res.json({success:false,err});
+          return res.status(200).json({
+              success: true
+          })
+      })
+  })
+})
 
 //Register route
 app.post("/api/users/register", (req, res) => {
